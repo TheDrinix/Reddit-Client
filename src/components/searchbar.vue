@@ -14,24 +14,15 @@ const searchTerm = computed({
 </script>
 
 <template>
-    <form class="w-2/5">
+    <form class="hidden md:block md:w-3/5 xl:w-2/5">
         <input
             type="text"
             name="searchbar"
             placeholder="Search"
             v-model="searchTerm"
-            class="rounded w-full focus:border-pink-600 focus:border-2"
+            class="rounded w-full transition-all ease-linear outline outline-1 outline-stone-400 focus:outline-pink-600 dark:outline-stone-900 dark:bg-neutral-900 dark:text-white p-2 dark:focus:outline-pink-600"
         />
     </form>
 </template>
 
-<style lang="scss">
-/* #searchbar {
-    display: inline-block;
-    height: 2rem;
-    width: 40%;
-    border-radius: 25px;
-    padding: 0.5rem 1rem;
-    font-size: 1.5rem;
-} */
-</style>
+<style lang="scss"></style>
