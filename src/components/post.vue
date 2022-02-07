@@ -18,13 +18,27 @@ const splitted = text.split('\n');
         </div>
         <hr class="my-2 dark:border-zinc-900" />
         <div class="h-8 flex justify-between">
-            <div class="flex justify-center items-center h-8 w-8">
-                <a v-on:click.prevent class="cursor-pointer"
-                    ><img
-                        src="../assets/comment-svgrepo-com.svg"
-                        alt=""
-                        class="h-6"
-                /></a>
+            <div class="flex justify-center items-center h-8">
+                <a v-on:click.prevent class="cursor-pointer flex">
+                    <svg
+                        width="24px"
+                        height="24px"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        class="inline-block"
+                    >
+                        <path
+                            fill="currentColor"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M19 4H5a2 2 0 0 0-2 2v15l3.467-2.6a2 2 0 0 1 1.2-.4H19a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"
+                        />
+                    </svg>
+                    <span class="pl-2 font-semibold">157</span>
+                </a>
             </div>
             <div class="h-8 flex justify-around items-center">
                 <a v-on:click.prevent class="cursor-pointer">

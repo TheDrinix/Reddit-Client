@@ -1,5 +1,17 @@
 <script setup lang="ts">
 import Searchbar from './searchbar.vue';
+
+const props = defineProps<{
+    mobileMenuOpened: boolean;
+}>();
+
+const emit = defineEmits<{
+    (e: 'toggleMobileMenu'): void;
+}>();
+
+const toggleMobileMenu = () => {
+    emit('toggleMobileMenu');
+};
 </script>
 
 <template>
@@ -11,9 +23,14 @@ import Searchbar from './searchbar.vue';
             src="../assets/logo.png"
             alt="logo"
         />
-        <Searchbar />
+        <transition name="fade">
+            <Searchbar v-if="props.mobileMenuOpened" />
+        </transition>
         <div class="inline-block w-14 pr-2">
-            <a v-on:click.prevent class="block lg:hidden cursor-pointer">
+            <a
+                v-on:click.prevent="toggleMobileMenu"
+                class="removeHighlight block lg:hidden cursor-pointer"
+            >
                 <svg
                     version="1.1"
                     id="Capa_1"
