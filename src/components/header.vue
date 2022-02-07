@@ -23,9 +23,7 @@ const toggleMobileMenu = () => {
             src="../assets/logo.png"
             alt="logo"
         />
-        <transition name="fade">
-            <Searchbar v-if="props.mobileMenuOpened" />
-        </transition>
+        <Searchbar :class="[props.mobileMenuOpened ? 'block' : 'hidden']" />
         <div class="inline-block w-14 pr-2">
             <a
                 v-on:click.prevent="toggleMobileMenu"

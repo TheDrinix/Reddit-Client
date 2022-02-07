@@ -1,22 +1,13 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+import { useStore } from 'vuex';
 import Subreddit from './subreddit.vue';
-const subreddits = [
-    {
-        name: 'r/pcmasterrace',
-        imgPath:
-            'https://b.thumbs.redditmedia.com/PN7Sv1axRx971W5-d_e-IC_RMiP2Sso8IqdRGq3UY9Y.png',
-    },
-    {
-        name: 'r/pcmasterrace',
-        imgPath:
-            'https://b.thumbs.redditmedia.com/PN7Sv1axRx971W5-d_e-IC_RMiP2Sso8IqdRGq3UY9Y.png',
-    },
-    {
-        name: 'r/pcmasterrace',
-        imgPath:
-            'https://b.thumbs.redditmedia.com/PN7Sv1axRx971W5-d_e-IC_RMiP2Sso8IqdRGq3UY9Y.png',
-    },
-];
+
+const store = useStore();
+
+const subreddits = computed(() => {
+    return store.state.subreddits.subreddits;
+});
 </script>
 
 <template>
@@ -25,6 +16,10 @@ const subreddits = [
     >
         <h3 class="text-xl">Subreddits</h3>
         <hr class="my-2 dark:border-zinc-900" />
-        <Subreddit v-for="subreddit in subreddits" :subreddit="subreddit" />
+        <Subreddit
+            v-for="(subreddit, index) in subreddits"
+            :subreddit="subreddit"
+            :index="index"
+        />
     </div>
 </template>

@@ -10,8 +10,15 @@ const store = useStore();
 
 onMounted(() => {
     const loadedTheme = localStorage.getItem('theme');
-    if (loadedTheme === 'dark') {
-        toggleTheme();
+    if (loadedTheme) {
+        if (loadedTheme === 'dark') {
+            toggleTheme();
+        }
+    } else {
+        const isDark = window.matchMedia(
+            '(prefers-color-scheme: dark)'
+        ).matches;
+        if (isDark) toggleTheme();
     }
 });
 
@@ -24,8 +31,19 @@ const toggleTheme = () => {
 
 let mobileMenuOpened = ref(false);
 const toggleMobileMenu = () => {
-    console.log(mobileMenuOpened.value);
     mobileMenuOpened.value = !mobileMenuOpened.value;
+};
+
+const subreddits = computed(() => {
+    return store.state.subreddits.subreddits;
+});
+
+const addSubreddit = () => {
+    store.commit('subreddits/addSubreddit', {
+        name: 'r/pcmasterrace',
+        imgPath:
+            'https://b.thumbs.redditmedia.com/PN7Sv1axRx971W5-d_e-IC_RMiP2Sso8IqdRGq3UY9Y.png',
+    });
 };
 </script>
 
@@ -63,6 +81,10 @@ const toggleMobileMenu = () => {
                 v-on:click="toggleTheme"
                 v-else
             />
+        </div>
+        <div class="test dark:text-white w-10/12 mx-auto">
+            <p>{{ subreddits }}</p>
+            <button @click="addSubreddit">Add subreddit</button>
         </div>
     </div>
 </template>

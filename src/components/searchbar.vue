@@ -18,7 +18,7 @@ const searchTerm = computed({
         <input
             type="text"
             name="searchbar"
-            placeholder="Search"
+            placeholder="Search for subreddits"
             v-model="searchTerm"
             class="rounded w-full transition-all ease-linear outline outline-1 focus:outline-2 hover:outline-2 outline-stone-400 focus:outline-pink-600 dark:outline-stone-900 dark:bg-neutral-900 dark:text-white p-2 dark:focus:outline-pink-600"
         />
