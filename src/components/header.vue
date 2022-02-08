@@ -7,6 +7,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
     (e: 'toggleMobileMenu'): void;
+    (e: 'search'): void;
 }>();
 
 const toggleMobileMenu = () => {
@@ -23,7 +24,10 @@ const toggleMobileMenu = () => {
             src="../assets/logo.png"
             alt="logo"
         />
-        <Searchbar :class="[props.mobileMenuOpened ? 'block' : 'hidden']" />
+        <Searchbar
+            :class="[props.mobileMenuOpened ? 'block' : 'hidden']"
+            @search="emit('search')"
+        />
         <div class="inline-block w-14 pr-2">
             <a
                 v-on:click.prevent="toggleMobileMenu"

@@ -1,12 +1,12 @@
 export const posts = {
     namespaced: true,
     state: {
-        number: 20,
+        posts: [],
     },
     mutations: {
-        increment(state: any) {
-            state.number++;
-        },
+        loadPosts() {},
     },
-    actions: {},
+    actions: {
+        loadPosts({ commit }: any, name: string) {},
+    },
 };

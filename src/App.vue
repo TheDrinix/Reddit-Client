@@ -5,6 +5,7 @@ import Header from './components/header.vue';
 import Post from './components/post.vue';
 import Subreddits from './components/subreddits.vue';
 import SubredditsPhone from './components/subredditsPhone.vue';
+import SearchResults from './components/searchResults.vue';
 
 const store = useStore();
 
@@ -20,6 +21,8 @@ onMounted(() => {
         ).matches;
         if (isDark) toggleTheme();
     }
+
+    store.commit('subreddits/loadSavedSubreddits');
 });
 
 let currentTheme = ref('light');
@@ -34,9 +37,10 @@ const toggleMobileMenu = () => {
     mobileMenuOpened.value = !mobileMenuOpened.value;
 };
 
-const subreddits = computed(() => {
-    return store.state.subreddits.subreddits;
-});
+let searchResultsShown = ref(false);
+const toggleSearchResults = () => {
+    searchResultsShown.value = !searchResultsShown.value;
+};
 
 const addSubreddit = () => {
     store.commit('subreddits/addSubreddit', {
@@ -52,6 +56,7 @@ const addSubreddit = () => {
         <Header
             :mobileMenuOpened="mobileMenuOpened"
             @toggleMobileMenu="toggleMobileMenu"
+            @search="toggleSearchResults"
         />
         <transition name="fade">
             <SubredditsPhone v-if="mobileMenuOpened" />
@@ -66,26 +71,30 @@ const addSubreddit = () => {
                 <Subreddits />
             </div>
         </main>
-        <div>
+        <div class="">
             <img
                 src="./assets/cloudy-svgrepo-com.svg"
                 alt="theme-toggle"
-                class="h-16 fixed bottom-4 right-4 cursor-pointer rounded-full"
+                class="h-16 fixed bottom-4 right-4 z-50 cursor-pointer rounded-full"
                 v-on:click="toggleTheme"
                 v-if="currentTheme === 'dark'"
             />
             <img
                 src="./assets/moon-svgrepo-com.svg"
                 alt="theme-toggle"
-                class="h-16 fixed bottom-4 right-4 cursor-pointer rounded-full -rotate-45"
+                class="h-16 fixed bottom-4 right-4 z-50 cursor-pointer rounded-full -rotate-45"
                 v-on:click="toggleTheme"
                 v-else
             />
         </div>
-        <div class="test dark:text-white w-10/12 mx-auto">
+        <!-- <div class="test dark:text-white w-10/12 mx-auto">
             <p>{{ subreddits }}</p>
             <button @click="addSubreddit">Add subreddit</button>
-        </div>
+        </div> -->
+        <SearchResults
+            v-if="searchResultsShown"
+            @toggle-show="toggleSearchResults"
+        />
     </div>
 </template>
 

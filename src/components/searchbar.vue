@@ -1,20 +1,27 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useStore } from 'vuex';
 const store = useStore();
 
-const searchTerm = computed({
-    get() {
-        return store.state.searchTerm;
-    },
-    set(newTerm) {
-        store.commit('updateSearchTerm', newTerm);
-    },
-});
+const emit = defineEmits<{
+    (e: 'search'): void;
+}>();
+
+const searchTerm = ref('');
+
+const handleSearch = () => {
+    if (searchTerm.value) {
+        emit('search');
+        store.dispatch('subreddits/search', searchTerm.value);
+    }
+};
 </script>
 
 <template>
-    <form class="md:block w-1/2 md:w-3/5 xl:w-2/5">
+    <form
+        class="md:block w-1/2 md:w-3/5 xl:w-2/5"
+        @submit.prevent="handleSearch"
+    >
         <input
             type="text"
             name="searchbar"
