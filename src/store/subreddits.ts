@@ -64,7 +64,9 @@ export const subreddits = {
                         );
                     } catch (error) {
                         console.error(error);
-                        return error;
+                    }
+                    if (!jsonResponses) {
+                        return;
                     }
                     jsonResponses.forEach((res: any, index: number) => {
                         searchResults.push({

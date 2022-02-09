@@ -6,6 +6,7 @@ import Post from './components/post.vue';
 import Subreddits from './components/subreddits.vue';
 import SubredditsPhone from './components/subredditsPhone.vue';
 import SearchResults from './components/searchResults.vue';
+import { formatPostsResponse } from './utils/posts'
 
 const store = useStore();
 
@@ -23,6 +24,7 @@ onMounted(() => {
     }
 
     store.commit('subreddits/loadSavedSubreddits');
+    store.dispatch('posts/loadPosts', 'r/popular')
 });
 
 let currentTheme = ref('light');
@@ -42,13 +44,10 @@ const toggleSearchResults = () => {
     searchResultsShown.value = !searchResultsShown.value;
 };
 
-const addSubreddit = () => {
-    store.commit('subreddits/addSubreddit', {
-        name: 'r/pcmasterrace',
-        imgPath:
-            'https://b.thumbs.redditmedia.com/PN7Sv1axRx971W5-d_e-IC_RMiP2Sso8IqdRGq3UY9Y.png',
-    });
-};
+const posts = computed(() => {
+    return store.state.posts.posts
+})
+
 </script>
 
 <template>
@@ -65,7 +64,7 @@ const addSubreddit = () => {
             class="grid grid-cols-12 gap-4 w-11/12 lg:w-10/12 2xl:w-8/12 mt-4 mx-auto font-sans"
         >
             <div class="col-span-12 lg:col-span-8">
-                <Post />
+                <Post v-for="post in posts" :data="post" />
             </div>
             <div class="hidden lg:block lg:col-span-4">
                 <Subreddits />
@@ -87,10 +86,6 @@ const addSubreddit = () => {
                 v-else
             />
         </div>
-        <!-- <div class="test dark:text-white w-10/12 mx-auto">
-            <p>{{ subreddits }}</p>
-            <button @click="addSubreddit">Add subreddit</button>
-        </div> -->
         <SearchResults
             v-if="searchResultsShown"
             @toggle-show="toggleSearchResults"

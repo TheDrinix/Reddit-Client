@@ -1,20 +1,27 @@
 <script setup lang="ts">
-const text =
-    'Any post that is \u201ctell me your stories\u201d or \u201c I\u2019ll read your story on YouTube\u201d will get removed and banned for three days.';
+import { Ref, ref } from 'vue';
+import { Post } from '../models/post';
 
-const splitted = text.split('\n');
+const props = defineProps<{
+    data: Post
+}>()
+
+let content: Ref<string> = ref(props.data.data)
 </script>
 
 <template>
     <div
-        class="bg-neutral-100 dark:bg-zinc-800 dark:text-white flex flex-col p-4 rounded-lg shadow-xl"
+        class="bg-neutral-100 dark:bg-zinc-800 dark:text-white flex flex-col p-4 rounded-lg shadow-xl mb-4"
     >
-        <h1 class="text-2xl text-center font-semibold">Header</h1>
+        <h1 class="text-2xl text-center font-semibold">{{props.data.title}}</h1>
         <hr class="my-4 dark:border-zinc-900" />
-        <div class="">
-            <p v-for="paragraph in splitted">
+        <div v-if="data.dataType === 'TEXT'" class="">
+            <p v-for="paragraph in content.split('\n')">
                 {{ paragraph }}
             </p>
+        </div>
+        <div v-else-if="data.dataType === 'IMAGE'">
+            <img :src="content" alt="">
         </div>
         <hr class="my-2 dark:border-zinc-900" />
         <div class="h-8 flex justify-between">
