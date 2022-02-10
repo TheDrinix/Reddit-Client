@@ -8,8 +8,8 @@ export const subreddits = {
     state: {
         subreddits: [
             {
-                name: 'r/popular',
-                imgPath: 'src/assets/popular3x_87028.png',
+                name: "r/popular",
+                imgPath: "src/assets/popular3x_87028.png",
             },
         ],
         searchResults: [],
@@ -27,7 +27,7 @@ export const subreddits = {
             state.subreddits.splice(index, 1);
         },
         loadSavedSubreddits(state: any) {
-            const loaded = localStorage.getItem('savedSubreddits');
+            const loaded = localStorage.getItem("savedSubreddits");
             if (loaded) {
                 state.subreddits = JSON.parse(loaded);
             }
@@ -83,7 +83,7 @@ export const subreddits = {
                         res.name.toLowerCase() === subreddit.name.toLowerCase()
                 );
             });
-            commit('saveSearchResults', filteredResult);
+            commit("saveSearchResults", filteredResult);
         },
     },
 };

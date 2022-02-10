@@ -1,37 +1,39 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
-import { useStore } from 'vuex';
-import Header from './components/header.vue';
-import Post from './components/post.vue';
-import Subreddits from './components/subreddits.vue';
-import SubredditsPhone from './components/subredditsPhone.vue';
-import SearchResults from './components/searchResults.vue';
-import { formatPostsResponse } from './utils/posts'
+import { computed, ComputedRef, onMounted, ref } from "vue";
+import { useStore } from "vuex";
+import $ from "jquery";
+import Header from "./components/header.vue";
+import Post from "./components/post.vue";
+import Subreddits from "./components/subreddits.vue";
+import SubredditsPhone from "./components/subredditsPhone.vue";
+import SearchResults from "./components/searchResults.vue";
+import { formatPostsResponse } from "./utils/posts";
+import { Post as PostModel } from "./models/post";
 
 const store = useStore();
 
 onMounted(() => {
-    const loadedTheme = localStorage.getItem('theme');
+    const loadedTheme = localStorage.getItem("theme");
     if (loadedTheme) {
-        if (loadedTheme === 'dark') {
+        if (loadedTheme === "dark") {
             toggleTheme();
         }
     } else {
         const isDark = window.matchMedia(
-            '(prefers-color-scheme: dark)'
+            "(prefers-color-scheme: dark)"
         ).matches;
         if (isDark) toggleTheme();
     }
 
-    store.commit('subreddits/loadSavedSubreddits');
-    store.dispatch('posts/loadPosts', 'r/popular')
+    store.commit("subreddits/loadSavedSubreddits");
+    store.dispatch("posts/loadPosts", "r/popular");
 });
 
-let currentTheme = ref('light');
+let currentTheme = ref("light");
 const toggleTheme = () => {
-    document.body.className = currentTheme.value === 'dark' ? '' : 'dark';
-    currentTheme.value = currentTheme.value === 'dark' ? 'light' : 'dark';
-    localStorage.setItem('theme', currentTheme.value);
+    currentTheme.value = currentTheme.value === "dark" ? "light" : "dark";
+    $("body").toggleClass("dark", currentTheme.value === "dark");
+    localStorage.setItem("theme", currentTheme.value);
 };
 
 let mobileMenuOpened = ref(false);
@@ -41,17 +43,20 @@ const toggleMobileMenu = () => {
 
 let searchResultsShown = ref(false);
 const toggleSearchResults = () => {
+    mobileMenuOpened.value = false;
     searchResultsShown.value = !searchResultsShown.value;
+    $("body").toggleClass("overflow-hidden", searchResultsShown.value);
 };
 
-const posts = computed(() => {
-    return store.state.posts.posts
-})
-
+const posts: ComputedRef<PostModel[]> = computed(() => {
+    return store.state.posts.posts;
+});
 </script>
 
 <template>
-    <div class="bg-stone-200 dark:bg-zinc-900 transition-colors min-h-screen">
+    <div
+        class="bg-stone-200 dark:bg-zinc-900 transition-colors min-h-screen overflow-x-hidden"
+    >
         <Header
             :mobileMenuOpened="mobileMenuOpened"
             @toggleMobileMenu="toggleMobileMenu"
@@ -64,7 +69,12 @@ const posts = computed(() => {
             class="grid grid-cols-12 gap-4 w-11/12 lg:w-10/12 2xl:w-8/12 mt-4 mx-auto font-sans"
         >
             <div class="col-span-12 lg:col-span-8">
-                <Post v-for="post in posts" :data="post" />
+                <Post
+                    v-for="{ title, dataType, data } in posts"
+                    :title="title"
+                    :data-type="dataType"
+                    :data="data"
+                />
             </div>
             <div class="hidden lg:block lg:col-span-4">
                 <Subreddits />

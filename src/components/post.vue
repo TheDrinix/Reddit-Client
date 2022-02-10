@@ -1,29 +1,97 @@
 <script setup lang="ts">
-import { Ref, ref } from 'vue';
-import { Post } from '../models/post';
+import { Ref, ref } from "vue";
+import { Post } from "../models/post";
 
 const props = defineProps<{
-    data: Post
-}>()
+    title: string;
+    dataType: string;
+    data: string | string[];
+}>();
 
-let content: Ref<string> = ref(props.data.data)
+let currentPicIndex = ref(0);
+const changeCurrentPic = (e: Event, dir: string) => {
+    if (dir === "next") {
+        if (currentPicIndex.value + 1 < props.data.length) {
+            currentPicIndex.value++;
+        }
+    } else {
+        if (currentPicIndex.value > 0) currentPicIndex.value--;
+    }
+};
 </script>
 
 <template>
     <div
         class="bg-neutral-100 dark:bg-zinc-800 dark:text-white flex flex-col p-4 rounded-lg shadow-xl mb-4"
     >
-        <h1 class="text-2xl text-center font-semibold">{{props.data.title}}</h1>
+        <h1 class="text-lg md:text-2xl text-center font-semibold">
+            {{ props.title }}
+        </h1>
         <hr class="my-4 dark:border-zinc-900" />
-        <div v-if="data.dataType === 'TEXT'" class="">
-            <p v-for="paragraph in content.split('\n')">
+        <div v-if="dataType === 'TEXT'" class="">
+            <p v-for="paragraph in data.split('\n')">
                 {{ paragraph }}
             </p>
         </div>
-        <div v-else-if="data.dataType === 'IMAGE'">
-            <img :src="content" alt="">
+        <div
+            v-else-if="dataType === 'IMAGE'"
+            style="max-height: 70vh"
+            class="flex w-full"
+        >
+            <img :src="data" alt="" class="h-inherit block object-contain" />
         </div>
-        <hr class="my-2 dark:border-zinc-900" />
+        <div
+            v-else-if="dataType === 'M-IMAGE'"
+            style="max-height: 70vh"
+            class="flex w-full max-w-full"
+        >
+            <div
+                class="flex relative h-inherit"
+                :class="{
+                    'opacity-0': 1 > currentPicIndex,
+                }"
+            >
+                <button
+                    class="material-icons"
+                    @click="(e: Event) => changeCurrentPic(e, 'prev')"
+                >
+                    arrow_back_ios
+                </button>
+            </div>
+            <div style="max-height: 70vh" class="flex w-full max-w-full">
+                <img
+                    :src="data[currentPicIndex]"
+                    alt=""
+                    class="h-inherit w-auto max-w-full block object-scale-down"
+                />
+            </div>
+            <div
+                class="flex relative h-inherit"
+                :class="{
+                    'opacity-0': data.length <= currentPicIndex + 1,
+                }"
+            >
+                <button
+                    class="material-icons"
+                    @click="(e: Event) => changeCurrentPic(e, 'next')"
+                >
+                    arrow_forward_ios
+                </button>
+            </div>
+        </div>
+        <div v-else-if="dataType === 'VIDEO'">
+            <video :src="data" controls class="w-full aspect-video"></video>
+        </div>
+        <div v-else-if="dataType === 'NON-REDDIT-VIDEO'">
+            <iframe
+                class="w-full aspect-video"
+                :src="data"
+                frameborder="0"
+                allow=" autoplay; clipboard-write; picture-in-picture"
+                allowfullscreen
+            ></iframe>
+        </div>
+        <hr class="my-2 dark:border-zinc-900" v-if="dataType !== 'empty'" />
         <div class="h-8 flex justify-between">
             <div class="flex justify-center items-center h-8">
                 <a v-on:click.prevent class="cursor-pointer flex">

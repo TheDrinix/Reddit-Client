@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { useStore } from 'vuex';
+import { computed } from "vue";
+import { useStore } from "vuex";
 
 const store = useStore();
 const props = defineProps<{
@@ -11,23 +12,31 @@ const props = defineProps<{
     isSearchResults?: boolean;
 }>();
 
+const isCurrent = computed(() => {
+    return store.state.posts.subreddit === props.subreddit.name;
+});
+
 const handleSubredditMove = () => {
     if (props.isSearchResults) {
-        store.commit('subreddits/addSubreddit', props.subreddit);
+        store.commit("subreddits/addSubreddit", props.subreddit);
     } else {
-        store.commit('subreddits/removeSubreddit', props.index);
+        store.commit("subreddits/removeSubreddit", props.index);
     }
 
     const toSave = JSON.stringify(store.state.subreddits.subreddits);
-    localStorage.setItem('savedSubreddits', toSave);
+    localStorage.setItem("savedSubreddits", toSave);
+};
+
+const handleSelectSubreddit = () => {
+    store.dispatch("posts/loadPosts", props.subreddit.name);
 };
 </script>
 
 <template>
     <div class="flex flex-center py-1 w-11/12 lg:w-full">
         <a
-            v-on:click.prevent
-            class="h-12 p-2 pr-4 w-full rounded-l-md inline-flex items-center cursor-pointer bg-gray-200 dark:bg-neutral-700 hover:bg-gray-300 dark:hover:bg-stone-700 outline outline-0 outline-neutral-200 dark:outline-neutral-600 hover:outline-2 hover:outline-pink-600 dark:hover:outline-pink-600 hover:mr-2px transition-all duration-100"
+            v-on:click.prevent="handleSelectSubreddit"
+            class="h-12 p-2 pr-4 w-full rounded-l-md inline-flex items-center cursor-pointer bg-gray-200 dark:bg-neutral-700 hover:bg-gray-300 dark:hover:bg-stone-700 outline outline-2 outline-neutral-200 dark:outline-neutral-600 hover:outline-2 hover:outline-pink-600 dark:hover:outline-pink-600 hover:mr-2px transition-all duration-100"
         >
             <img
                 :src="
