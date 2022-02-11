@@ -1,13 +1,15 @@
 <script setup lang="ts">
+// @ts-nocheck
 import { marked } from 'marked';
 import { computed, Ref, ref } from 'vue';
-import { Post } from '../models/post';
+import Comments from './comments/comments.vue';
 
 const props = defineProps<{
     title: string;
     dataType: string;
     numComments: number;
     upvotes: number;
+    url: string;
     data?: string | string[];
 }>();
 
@@ -24,6 +26,11 @@ const changeCurrentPic = (e: Event, dir: string) => {
     } else {
         if (currentPicIndex.value > 0) currentPicIndex.value--;
     }
+};
+
+let commentsOpened = ref(false);
+const toggleComments = () => {
+    commentsOpened.value = !commentsOpened.value;
 };
 </script>
 
@@ -100,7 +107,10 @@ const changeCurrentPic = (e: Event, dir: string) => {
         <hr class="my-2 dark:border-zinc-900" v-if="dataType !== 'empty'" />
         <div class="h-8 flex justify-between">
             <div class="flex justify-center items-center h-8">
-                <a v-on:click.prevent class="cursor-pointer flex">
+                <a
+                    v-on:click.prevent="toggleComments"
+                    class="cursor-pointer flex"
+                >
                     <svg
                         width="24px"
                         height="24px"
@@ -171,5 +181,6 @@ const changeCurrentPic = (e: Event, dir: string) => {
                 </a>
             </div>
         </div>
+        <Comments v-if="commentsOpened" :url="url" />
     </div>
 </template>

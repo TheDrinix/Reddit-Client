@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useStore } from 'vuex';
-import Subreddit from './subreddit.vue';
+import Subreddit from '../subreddits/subreddit.vue';
 
 const store = useStore();
 

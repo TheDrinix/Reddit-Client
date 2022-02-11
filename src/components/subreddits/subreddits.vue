@@ -20,7 +20,7 @@ const currentSubreddit = computed(() => {
     >
         <h3 class="text-xl">Subreddits</h3>
         <hr class="my-2 dark:border-zinc-900" />
-        <Subreddit :subreddit="currentSubreddit" />
+        <Subreddit :subreddit="currentSubreddit" :index="0" />
         <hr class="my-2 dark:border-zinc-900" />
         <Subreddit
             v-for="(subreddit, index) in subreddits"

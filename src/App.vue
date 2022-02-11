@@ -2,13 +2,13 @@
 import { computed, ComputedRef, onMounted, ref } from 'vue';
 import { useStore } from 'vuex';
 import $ from 'jquery';
-import Header from './components/header.vue';
-import Post from './components/post.vue';
-import Subreddits from './components/subreddits.vue';
-import SubredditsPhone from './components/subredditsPhone.vue';
-import SearchResults from './components/searchResults.vue';
+import Header from './components/header/header.vue';
+import Post from './components/posts/post.vue';
+import Subreddits from './components/subreddits/subreddits.vue';
+import SubredditsPhone from './components/subreddits/subredditsPhone.vue';
+import SearchResults from './components/subreddits/searchResults.vue';
 import { Post as PostModel } from './models/post';
-import PostSkeleton from './components/postSkeleton.vue';
+import PostSkeleton from './components/posts/postSkeleton.vue';
 
 const store = useStore();
 
@@ -87,12 +87,14 @@ const isLoading: ComputedRef<boolean> = computed(() => {
                         dataType,
                         numComments,
                         upvotes,
+                        url,
                         data,
                     } in posts"
                     :title="title"
                     :data-type="dataType"
                     :numComments="numComments"
                     :upvotes="upvotes"
+                    :url="url"
                     :data="data"
                 />
             </div>

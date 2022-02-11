@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ComputedRef } from 'vue';
 import { useStore } from 'vuex';
-import { Subreddit as SubredditType } from '../store/subreddits';
+import { Subreddit as SubredditType } from '../../store/subreddits';
 import Subreddit from './subreddit.vue';
 
 const emit = defineEmits<{

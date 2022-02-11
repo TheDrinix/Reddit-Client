@@ -1,3 +1,4 @@
+import { Comment } from '../models/comment';
 import { Post } from '../models/post';
 
 enum PostType {
@@ -15,6 +16,7 @@ export const formatPostsResponse = (res: any) => {
         const title = postData.title;
         const numOfComments: number = postData.num_comments;
         const upvotes: number = postData.ups;
+        const link: string = postData.permalink;
         let postType: string;
         let data: undefined | string | string[];
 
@@ -55,7 +57,21 @@ export const formatPostsResponse = (res: any) => {
             postType = 'empty';
         }
 
-        return new Post(title, postType, numOfComments, upvotes, data);
+        return new Post(title, postType, numOfComments, upvotes, link, data);
     });
     return postArray;
+};
+
+export const loadComments = async (url: string) => {
+    const response = await fetch(
+        `https://www.reddit.com/${url}.json?raw_json=1`
+    );
+    const jsonResponse: any[] = await response.json();
+    console.log(jsonResponse);
+    const comments: Comment[] = jsonResponse[1].data.children.map(
+        ({ data }: any) => {
+            return new Comment(data.author, data.body_html, data.ups);
+        }
+    );
+    return comments;
 };

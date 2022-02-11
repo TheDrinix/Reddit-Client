@@ -1,4 +1,0 @@
-Search for subreddits -> https://www.reddit.com/subreddits/search.json?q={{search term}}&include_over_18=on
-Popular posts -> https://www.reddit.com/r/popular.json
-Posts from subreddit -> www.reddit.com/r/{{reddit name}}.json
-Get subreddit icon -> https://www.reddit.com/r/{{reddit name}}/about.json

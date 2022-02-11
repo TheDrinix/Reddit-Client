@@ -21,7 +21,7 @@ const toggleMobileMenu = () => {
     >
         <img
             class="inline-block h-14 pl-2"
-            src="../assets/logo.png"
+            src="../../assets/logo.png"
             alt="logo"
         />
         <Searchbar
