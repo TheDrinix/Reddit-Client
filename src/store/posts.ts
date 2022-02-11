@@ -1,11 +1,13 @@
-import { Post } from "../models/post";
-import { formatPostsResponse } from "../utils/posts";
+import { Post } from '../models/post';
+import { formatPostsResponse } from '../utils/posts';
+import { Subreddit } from './subreddits';
 
 export const posts = {
     namespaced: true,
     state: {
-        subreddit: "",
+        subreddit: {},
         posts: [],
+        isLoading: false,
     },
     mutations: {
         loadPosts(state: any, response: any) {
@@ -19,13 +21,15 @@ export const posts = {
         },
     },
     actions: {
-        async loadPosts({ commit }: any, subredditName: string) {
+        async loadPosts({ state, commit }: any, subreddit: Subreddit) {
+            state.isLoading = true;
             const response = await fetch(
-                `https://www.reddit.com/${subredditName}.json?raw_json=1`
+                `https://www.reddit.com/${subreddit.name}.json?raw_json=1`
             );
             const jsonResponse = await response.json();
-            commit("loadPosts", jsonResponse);
-            commit("saveCurrentSubbreditName", subredditName);
+            state.isLoading = false;
+            commit('loadPosts', jsonResponse);
+            commit('saveCurrentSubbreditName', subreddit);
         },
     },
 };

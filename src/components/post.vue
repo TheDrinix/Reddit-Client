@@ -1,16 +1,23 @@
 <script setup lang="ts">
-import { Ref, ref } from "vue";
-import { Post } from "../models/post";
+import { marked } from 'marked';
+import { computed, Ref, ref } from 'vue';
+import { Post } from '../models/post';
 
 const props = defineProps<{
     title: string;
     dataType: string;
-    data: string | string[];
+    numComments: number;
+    upvotes: number;
+    data?: string | string[];
 }>();
+
+const markdownToHTML = computed(() => {
+    return marked(props.data);
+});
 
 let currentPicIndex = ref(0);
 const changeCurrentPic = (e: Event, dir: string) => {
-    if (dir === "next") {
+    if (dir === 'next') {
         if (currentPicIndex.value + 1 < props.data.length) {
             currentPicIndex.value++;
         }
@@ -28,15 +35,11 @@ const changeCurrentPic = (e: Event, dir: string) => {
             {{ props.title }}
         </h1>
         <hr class="my-4 dark:border-zinc-900" />
-        <div v-if="dataType === 'TEXT'" class="">
-            <p v-for="paragraph in data.split('\n')">
-                {{ paragraph }}
-            </p>
-        </div>
+        <div v-if="dataType === 'TEXT'" v-html="markdownToHTML"></div>
         <div
             v-else-if="dataType === 'IMAGE'"
             style="max-height: 70vh"
-            class="flex w-full"
+            class="flex justify-center w-full"
         >
             <img :src="data" alt="" class="h-inherit block object-contain" />
         </div>
@@ -58,7 +61,10 @@ const changeCurrentPic = (e: Event, dir: string) => {
                     arrow_back_ios
                 </button>
             </div>
-            <div style="max-height: 70vh" class="flex w-full max-w-full">
+            <div
+                style="max-height: 70vh"
+                class="flex justify-center w-full max-w-full"
+            >
                 <img
                     :src="data[currentPicIndex]"
                     alt=""
@@ -112,7 +118,7 @@ const changeCurrentPic = (e: Event, dir: string) => {
                             d="M19 4H5a2 2 0 0 0-2 2v15l3.467-2.6a2 2 0 0 1 1.2-.4H19a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"
                         />
                     </svg>
-                    <span class="pl-2 font-semibold">157</span>
+                    <span class="pl-2 font-semibold">{{ numComments }}</span>
                 </a>
             </div>
             <div class="h-8 flex justify-around items-center">
@@ -139,7 +145,7 @@ const changeCurrentPic = (e: Event, dir: string) => {
                         </g>
                     </svg>
                 </a>
-                <span class="font-semibold">54564890</span>
+                <span class="font-semibold">{{ upvotes }}</span>
                 <a v-on:click.prevent class="cursor-pointer">
                     <svg
                         version="1.1"

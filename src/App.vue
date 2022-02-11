@@ -1,39 +1,42 @@
 <script setup lang="ts">
-import { computed, ComputedRef, onMounted, ref } from "vue";
-import { useStore } from "vuex";
-import $ from "jquery";
-import Header from "./components/header.vue";
-import Post from "./components/post.vue";
-import Subreddits from "./components/subreddits.vue";
-import SubredditsPhone from "./components/subredditsPhone.vue";
-import SearchResults from "./components/searchResults.vue";
-import { formatPostsResponse } from "./utils/posts";
-import { Post as PostModel } from "./models/post";
+import { computed, ComputedRef, onMounted, ref } from 'vue';
+import { useStore } from 'vuex';
+import $ from 'jquery';
+import Header from './components/header.vue';
+import Post from './components/post.vue';
+import Subreddits from './components/subreddits.vue';
+import SubredditsPhone from './components/subredditsPhone.vue';
+import SearchResults from './components/searchResults.vue';
+import { Post as PostModel } from './models/post';
+import PostSkeleton from './components/postSkeleton.vue';
 
 const store = useStore();
 
 onMounted(() => {
-    const loadedTheme = localStorage.getItem("theme");
+    const loadedTheme = localStorage.getItem('theme');
     if (loadedTheme) {
-        if (loadedTheme === "dark") {
+        if (loadedTheme === 'dark') {
             toggleTheme();
         }
     } else {
         const isDark = window.matchMedia(
-            "(prefers-color-scheme: dark)"
+            '(prefers-color-scheme: dark)'
         ).matches;
         if (isDark) toggleTheme();
     }
 
-    store.commit("subreddits/loadSavedSubreddits");
-    store.dispatch("posts/loadPosts", "r/popular");
+    store.commit('subreddits/loadSavedSubreddits');
+    store.dispatch('posts/loadPosts', {
+        name: 'r/popular',
+        imgPath: 'src/assets/popular3x_87028.png',
+    });
 });
 
-let currentTheme = ref("light");
+let currentTheme = ref('light');
 const toggleTheme = () => {
-    currentTheme.value = currentTheme.value === "dark" ? "light" : "dark";
-    $("body").toggleClass("dark", currentTheme.value === "dark");
-    localStorage.setItem("theme", currentTheme.value);
+    currentTheme.value = currentTheme.value === 'dark' ? 'light' : 'dark';
+    $('body').toggleClass('dark', currentTheme.value === 'dark');
+    localStorage.setItem('theme', currentTheme.value);
 };
 
 let mobileMenuOpened = ref(false);
@@ -45,11 +48,15 @@ let searchResultsShown = ref(false);
 const toggleSearchResults = () => {
     mobileMenuOpened.value = false;
     searchResultsShown.value = !searchResultsShown.value;
-    $("body").toggleClass("overflow-hidden", searchResultsShown.value);
+    $('body').toggleClass('overflow-hidden', searchResultsShown.value);
 };
 
 const posts: ComputedRef<PostModel[]> = computed(() => {
     return store.state.posts.posts;
+});
+
+const isLoading: ComputedRef<boolean> = computed(() => {
+    return store.state.posts.isLoading;
 });
 </script>
 
@@ -68,11 +75,24 @@ const posts: ComputedRef<PostModel[]> = computed(() => {
         <main
             class="grid grid-cols-12 gap-4 w-11/12 lg:w-10/12 2xl:w-8/12 mt-4 mx-auto font-sans"
         >
-            <div class="col-span-12 lg:col-span-8">
+            <div class="col-span-12 lg:col-span-8" v-if="isLoading">
+                <PostSkeleton />
+                <PostSkeleton />
+                <PostSkeleton />
+            </div>
+            <div class="col-span-12 lg:col-span-8" v-else>
                 <Post
-                    v-for="{ title, dataType, data } in posts"
+                    v-for="{
+                        title,
+                        dataType,
+                        numComments,
+                        upvotes,
+                        data,
+                    } in posts"
                     :title="title"
                     :data-type="dataType"
+                    :numComments="numComments"
+                    :upvotes="upvotes"
                     :data="data"
                 />
             </div>
