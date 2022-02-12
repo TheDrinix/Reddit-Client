@@ -34,6 +34,7 @@ const { comment, isLoading } = defineProps<{
         />
         <div
             v-html="comment.content"
+            class="p-2 overflow-hidden"
             :class="[
                 isLoading
                     ? ['h-4', 'bg-gray-300', 'dark:bg-zinc-700', 'rounded']

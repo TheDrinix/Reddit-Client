@@ -10,6 +10,7 @@ const props = defineProps<{
     };
     index: number;
     isSearchResults?: boolean;
+    hideRemove?: boolean;
 }>();
 
 const handleSubredditMove = () => {
@@ -33,6 +34,7 @@ const handleSelectSubreddit = () => {
         <a
             v-on:click.prevent="handleSelectSubreddit"
             class="h-12 p-2 pr-4 w-full rounded-l-md inline-flex items-center cursor-pointer bg-gray-200 dark:bg-neutral-700 hover:bg-gray-300 dark:hover:bg-stone-700 outline outline-0 outline-neutral-200 dark:outline-neutral-600 hover:outline-2 hover:outline-pink-600 dark:hover:outline-pink-600 hover:mr-2px transition-all duration-100"
+            :class="{ 'rounded-r-md': hideRemove }"
         >
             <img
                 :src="
@@ -46,6 +48,7 @@ const handleSelectSubreddit = () => {
             <span class="pl-2 text-lg">{{ props.subreddit.name }}</span>
         </a>
         <a
+            v-if="!hideRemove"
             @click.prevent="handleSubredditMove"
             class="h-12 w-12 p-2 rounded-r-md inline-flex items-center justify-center cursor-pointer bg-gray-200 dark:bg-neutral-700 hover:bg-gray-300 dark:hover:bg-stone-700 outline outline-0 outline-neutral-200 dark:outline-neutral-600 hover:outline-2 hover:outline-pink-600 dark:hover:outline-pink-600 transition-all duration-100"
         >

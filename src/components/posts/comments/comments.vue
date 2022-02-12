@@ -30,7 +30,11 @@ onMounted(() => {
             :isLoading="commentsLoading"
         />
     </div>
-    <div v-else style="max-height: 40vh" class="overflow-y-scroll">
+    <div
+        v-else
+        style="max-height: 40vh"
+        class="overflox-x-hidden overflow-y-scroll"
+    >
         <Comment v-for="comment in comments" :comment="comment" />
     </div>
 </template>
