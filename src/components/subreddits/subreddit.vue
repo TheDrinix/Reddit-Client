@@ -40,7 +40,7 @@ const handleSelectSubreddit = () => {
                 :src="
                     props.subreddit.imgPath
                         ? props.subreddit.imgPath
-                        : '/src/assets/logo.png'
+                        : 'https://cdn.discordapp.com/attachments/616206746020610073/942143751344754768/logo.png'
                 "
                 :alt="props.subreddit.name"
                 class="h-8 rounded-full inline-block"
