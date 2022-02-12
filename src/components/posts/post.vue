@@ -1,6 +1,5 @@
 <script setup lang="ts">
 // @ts-nocheck
-import { marked } from 'marked';
 import { computed, reactive, Ref, ref } from 'vue';
 import Comments from './comments/comments.vue';
 
@@ -13,10 +12,6 @@ const props = defineProps<{
     author: string;
     data?: string | string[];
 }>();
-
-/* const markdownToHTML = computed(() => {
-    return marked(props.data);
-}); */
 
 let currentPicIndex = ref(0);
 const changeCurrentPic = (e: Event, dir: string) => {
@@ -36,6 +31,8 @@ let commentsOpened = ref(false);
 const toggleComments = () => {
     commentsOpened.value = !commentsOpened.value;
 };
+
+let upDiff: Ref<number> = ref(0);
 </script>
 
 <template>
@@ -140,13 +137,23 @@ const toggleComments = () => {
                 </a>
             </div>
             <div class="h-8 flex justify-around items-center">
-                <a v-on:click.prevent class="cursor-pointer">
+                <a
+                    v-on:click.prevent="
+                        upDiff === 1 ? (upDiff = 0) : (upDiff = 1)
+                    "
+                    class="cursor-pointer"
+                >
                     <svg
                         version="1.1"
                         id="Capa_1"
                         xmlns="http://www.w3.org/2000/svg"
                         xmlns:xlink="http://www.w3.org/1999/xlink"
-                        class="h-6 fill-black dark:fill-white"
+                        class="h-6 hover:fill-pink-700 dark:hover:fill-pink-700 transition-colors"
+                        :class="[
+                            upDiff === 1
+                                ? ['fill-pink-600', 'dark:fill-pink-600']
+                                : ['fill-black', 'dark:fill-white'],
+                        ]"
                         x="0px"
                         y="0px"
                         viewBox="0 0 50.454 50.454"
@@ -163,14 +170,24 @@ const toggleComments = () => {
                         </g>
                     </svg>
                 </a>
-                <span class="font-semibold">{{ upvotes }}</span>
-                <a v-on:click.prevent class="cursor-pointer">
+                <span class="font-semibold">{{ upvotes + upDiff }}</span>
+                <a
+                    v-on:click.prevent="
+                        upDiff === -1 ? (upDiff = 0) : (upDiff = -1)
+                    "
+                    class="cursor-pointer"
+                >
                     <svg
                         version="1.1"
                         id="Capa_1"
                         xmlns="http://www.w3.org/2000/svg"
                         xmlns:xlink="http://www.w3.org/1999/xlink"
-                        class="h-6 rotate-180 fill-black dark:fill-white"
+                        class="h-6 rotate-180 fill-black dark:fill-white hover:fill-pink-700 dark:hover:fill-pink-700 transition-colors"
+                        :class="[
+                            upDiff === -1
+                                ? ['fill-pink-600', 'dark:fill-pink-600']
+                                : ['fill-black', 'dark:fill-white'],
+                        ]"
                         x="0px"
                         y="0px"
                         viewBox="0 0 50.454 50.454"
