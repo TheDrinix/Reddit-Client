@@ -12,11 +12,9 @@ export const posts = {
     mutations: {
         loadPosts(state: any, response: any) {
             const posts: Post[] = formatPostsResponse(response);
-            console.log(posts);
             state.posts = posts;
         },
         saveCurrentSubbreditName(state: any, name: string) {
-            console.log(name);
             state.subreddit = name;
         },
     },

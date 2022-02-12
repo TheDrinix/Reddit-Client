@@ -5,6 +5,7 @@ export class Post {
         public numComments: number,
         public upvotes: number,
         public url: string,
+        public author: string,
         public data?: any
     ) {}
 }

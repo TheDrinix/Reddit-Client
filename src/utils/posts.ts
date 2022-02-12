@@ -17,12 +17,13 @@ export const formatPostsResponse = (res: any) => {
         const numOfComments: number = postData.num_comments;
         const upvotes: number = postData.ups;
         const link: string = postData.permalink;
+        const author: string = postData.author;
         let postType: string;
         let data: undefined | string | string[];
 
         if (postData.selftext) {
             postType = PostType.Text;
-            data = postData.selftext;
+            data = postData.selftext_html;
         } else if (postData.post_hint === 'image' || postData.is_gallery) {
             if (!postData.is_gallery) {
                 postType = PostType.Image;
@@ -38,7 +39,6 @@ export const formatPostsResponse = (res: any) => {
                 data = Object.values(postData.media_metadata).map(
                     (image: any) => image.s.u
                 );
-                console.log(data);
             }
         } else if (postData.post_hint === 'hosted:video') {
             postType = PostType.Video;
@@ -56,8 +56,15 @@ export const formatPostsResponse = (res: any) => {
         } else {
             postType = 'empty';
         }
-
-        return new Post(title, postType, numOfComments, upvotes, link, data);
+        return new Post(
+            title,
+            postType,
+            numOfComments,
+            upvotes,
+            link,
+            author,
+            data
+        );
     });
     return postArray;
 };
@@ -67,7 +74,6 @@ export const loadComments = async (url: string) => {
         `https://www.reddit.com/${url}.json?raw_json=1`
     );
     const jsonResponse: any[] = await response.json();
-    console.log(jsonResponse);
     const comments: Comment[] = jsonResponse[1].data.children.map(
         ({ data }: any) => {
             return new Comment(data.author, data.body_html, data.ups);

@@ -88,6 +88,7 @@ const isLoading: ComputedRef<boolean> = computed(() => {
                         numComments,
                         upvotes,
                         url,
+                        author,
                         data,
                     } in posts"
                     :title="title"
@@ -95,6 +96,7 @@ const isLoading: ComputedRef<boolean> = computed(() => {
                     :numComments="numComments"
                     :upvotes="upvotes"
                     :url="url"
+                    :author="author"
                     :data="data"
                 />
             </div>

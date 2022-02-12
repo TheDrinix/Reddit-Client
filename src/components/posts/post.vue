@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // @ts-nocheck
 import { marked } from 'marked';
-import { computed, Ref, ref } from 'vue';
+import { computed, reactive, Ref, ref } from 'vue';
 import Comments from './comments/comments.vue';
 
 const props = defineProps<{
@@ -10,12 +10,13 @@ const props = defineProps<{
     numComments: number;
     upvotes: number;
     url: string;
+    author: string;
     data?: string | string[];
 }>();
 
-const markdownToHTML = computed(() => {
+/* const markdownToHTML = computed(() => {
     return marked(props.data);
-});
+}); */
 
 let currentPicIndex = ref(0);
 const changeCurrentPic = (e: Event, dir: string) => {
@@ -27,6 +28,9 @@ const changeCurrentPic = (e: Event, dir: string) => {
         if (currentPicIndex.value > 0) currentPicIndex.value--;
     }
 };
+const currentImage = computed(() => {
+    return props.data[currentPicIndex.value];
+});
 
 let commentsOpened = ref(false);
 const toggleComments = () => {
@@ -41,8 +45,9 @@ const toggleComments = () => {
         <h1 class="text-lg md:text-2xl text-center font-semibold">
             {{ props.title }}
         </h1>
+        <h6 class="text-pink-600 text-xs text-center">{{ author }}</h6>
         <hr class="my-4 dark:border-zinc-900" />
-        <div v-if="dataType === 'TEXT'" v-html="markdownToHTML"></div>
+        <div v-if="dataType === 'TEXT'" v-html="data"></div>
         <div
             v-else-if="dataType === 'IMAGE'"
             style="max-height: 70vh"
@@ -73,7 +78,7 @@ const toggleComments = () => {
                 class="flex justify-center w-full max-w-full"
             >
                 <img
-                    :src="data[currentPicIndex]"
+                    :src="currentImage"
                     alt=""
                     class="h-inherit w-auto max-w-full block object-scale-down"
                 />
@@ -109,15 +114,13 @@ const toggleComments = () => {
             <div class="flex justify-center items-center h-8">
                 <a
                     v-on:click.prevent="toggleComments"
-                    class="cursor-pointer flex"
+                    class="cursor-pointer flex h-8 items-center rounded-sm hover:text-pink-600 transition-all"
                 >
                     <svg
-                        width="24px"
-                        height="24px"
                         viewBox="0 0 24 24"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
-                        class="inline-block"
+                        class="inline-block h-full w-auto"
                     >
                         <path
                             fill="currentColor"
@@ -126,9 +129,14 @@ const toggleComments = () => {
                             stroke-linejoin="round"
                             stroke-width="2"
                             d="M19 4H5a2 2 0 0 0-2 2v15l3.467-2.6a2 2 0 0 1 1.2-.4H19a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"
+                            :class="[
+                                commentsOpened
+                                    ? ['fill-pink-600', 'stroke-pink-600']
+                                    : '',
+                            ]"
                         />
                     </svg>
-                    <span class="pl-2 font-semibold">{{ numComments }}</span>
+                    <span class="px-2 font-semibold">{{ numComments }}</span>
                 </a>
             </div>
             <div class="h-8 flex justify-around items-center">
