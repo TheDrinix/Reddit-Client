@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // @ts-nocheck
-import { computed, reactive, Ref, ref } from 'vue';
+import { computed, onMounted, reactive, Ref, ref } from 'vue';
 import Comments from './comments/comments.vue';
 
 const props = defineProps<{
@@ -12,6 +12,9 @@ const props = defineProps<{
     author: string;
     data?: string | string[];
 }>();
+
+let textData = ref('');
+let multiURL: Ref<string[]> = ref([]);
 
 let currentPicIndex = ref(0);
 const changeCurrentPic = (e: Event, dir: string) => {
@@ -33,6 +36,15 @@ const toggleComments = () => {
 };
 
 let upDiff: Ref<number> = ref(0);
+
+onMounted(() => {
+    if (props.dataType === 'M-IMAGE') {
+        multiURL.value = props.data;
+    } else if (props.dataType !== 'empty') {
+        textData.value = props.data;
+    } else {
+    }
+});
 </script>
 
 <template>
@@ -44,13 +56,17 @@ let upDiff: Ref<number> = ref(0);
         </h1>
         <h6 class="text-pink-600 text-xs text-center">{{ author }}</h6>
         <hr class="my-4 dark:border-zinc-900" />
-        <div v-if="dataType === 'TEXT'" v-html="data"></div>
+        <div v-if="dataType === 'TEXT'" v-html="textData"></div>
         <div
             v-else-if="dataType === 'IMAGE'"
             style="max-height: 70vh"
             class="flex justify-center w-full"
         >
-            <img :src="data" alt="" class="h-inherit block object-contain" />
+            <img
+                :src="textData"
+                alt=""
+                class="h-inherit block object-contain"
+            />
         </div>
         <div
             v-else-if="dataType === 'M-IMAGE'"
@@ -83,7 +99,7 @@ let upDiff: Ref<number> = ref(0);
             <div
                 class="flex relative h-inherit"
                 :class="{
-                    'opacity-0': data.length <= currentPicIndex + 1,
+                    'opacity-0': multiURL.length <= currentPicIndex + 1,
                 }"
             >
                 <button
@@ -95,12 +111,12 @@ let upDiff: Ref<number> = ref(0);
             </div>
         </div>
         <div v-else-if="dataType === 'VIDEO'">
-            <video :src="data" controls class="w-full aspect-video"></video>
+            <video :src="textData" controls class="w-full aspect-video"></video>
         </div>
         <div v-else-if="dataType === 'NON-REDDIT-VIDEO'">
             <iframe
                 class="w-full aspect-video"
-                :src="data"
+                :src="textData"
                 frameborder="0"
                 allow=" autoplay; clipboard-write; picture-in-picture"
                 allowfullscreen
