@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ComputedRef } from 'vue';
 import { useStore } from 'vuex';
 
 const store = useStore();
@@ -27,6 +27,12 @@ const handleSubredditMove = () => {
 const handleSelectSubreddit = () => {
     store.dispatch('posts/loadPosts', props.subreddit);
 };
+
+let logoPath: ComputedRef<string> = computed(() => {
+    return props.subreddit.imgPath
+        ? props.subreddit.imgPath
+        : `${new URL('../../assets/logo.png', import.meta.url)}`;
+});
 </script>
 
 <template>
@@ -37,11 +43,7 @@ const handleSelectSubreddit = () => {
             :class="{ 'rounded-r-md': hideRemove }"
         >
             <img
-                :src="
-                    props.subreddit.imgPath
-                        ? props.subreddit.imgPath
-                        : 'https://cdn.discordapp.com/attachments/616206746020610073/942143751344754768/logo.png'
-                "
+                :src="logoPath"
                 :alt="props.subreddit.name"
                 class="h-8 rounded-full inline-block"
             />

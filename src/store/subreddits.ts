@@ -9,8 +9,10 @@ export const subreddits = {
         subreddits: [
             {
                 name: 'r/popular',
-                imgPath:
-                    'https://cdn.discordapp.com/attachments/616206746020610073/942139768580481054/popular3x_87028.png',
+                imgPath: new URL(
+                    '../assets/popular3x_87028.png',
+                    import.meta.url
+                ),
             },
         ],
         searchResults: [],
